@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Music Player</title>
+    <link rel="stylesheet" href="main-css.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="main-body">
+        <div class="music-player">
+            <nav>
+                <div class="circle" role="button" aria-label="Go back" tabindex="0">
+                    <i class="fa-solid fa-angle-left"></i>
+                </div>
+                <div class="circle" role="button" aria-label="Menu" tabindex="0">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </nav>
+            <img src="arjan.jpg" class="song-img" alt="Reshmi Rumal album art by Arjan Dhillon">
+            <h1>Reshmi Rumal</h1>
+            <p>Arjan Dhillon</p>
+
+            <audio id="song">
+                <source src="Reshmi Rumal - Arjan Dhillon (DJJOhAL.Com).mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+
+            <input title="Seek progress" type="range" value="0" id="progress" aria-label="Music progress seek bar">
+
+            <div class="control-icns">
+                <div onclick="prevSong()" role="button" aria-label="Previous track" tabindex="0"><i class="fa-solid fa-backward-step"></i></div>
+                <div onclick="playpause()" role="button" aria-label="Play or pause" tabindex="0"><i class="fa-solid play-pause fa-play" id="ctrlIcn"></i></div>
+                <div onclick="nextSong()" role="button" aria-label="Next track" tabindex="0"><i class="fa-solid fa-forward-step"></i></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
