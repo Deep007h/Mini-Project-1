@@ -1,41 +1,488 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="midnight">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basic Music Player</title>
+    <title>Music Player</title>
+    <meta name="description" content="Advanced modern web music player with Web Audio API 10-band equalizer, real-time visualizers, synchronized lyrics, multi-track queue, and dynamic themes.">
     <link rel="stylesheet" href="main-css.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="main-body">
-        <div class="music-player">
-            <nav>
-                <div class="circle" role="button" aria-label="Go back" tabindex="0">
-                    <i class="fa-solid fa-angle-left"></i>
-                </div>
-                <div class="circle" role="button" aria-label="Menu" tabindex="0">
-                    <i class="fa-solid fa-bars"></i>
-                </div>
-            </nav>
-            <img src="arjan.jpg" class="song-img" alt="Reshmi Rumal album art by Arjan Dhillon">
-            <h1>Reshmi Rumal</h1>
-            <p>Arjan Dhillon</p>
+    <!-- Ambient Dynamic Background Glow -->
+    <div class="ambient-glow" id="ambientGlow" aria-hidden="true"></div>
+    <div class="ambient-grid" aria-hidden="true"></div>
 
-            <audio id="song">
-                <source src="Reshmi Rumal - Arjan Dhillon (DJJOhAL.Com).mp3" type="audio/mpeg">
+    <div class="app-container">
+        <!-- Main Music Player Card -->
+        <main class="player-card glass-panel" id="playerCard" role="region" aria-label="Audio Player">
+            
+            <!-- Top App Navigation -->
+            <header class="player-header">
+                <div class="header-actions">
+                    <!-- Playlist / Queue Drawer Toggle -->
+                    <button class="icon-btn" id="queueToggleBtn" title="Playlist & Queue (Q)" aria-label="Toggle Playlist">
+                        <i class="fa-solid fa-list-ul"></i>
+                        <span class="badge" id="queueCountBadge">1</span>
+                    </button>
+
+                    <!-- Visualizer Mode Picker -->
+                    <button class="icon-btn" id="visModeBtn" title="Cycle Visualizer (V)" aria-label="Cycle Visualizer Mode">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        <span class="btn-sub" id="visModeBadge">Bars</span>
+                    </button>
+
+                    <!-- 10-Band Equalizer -->
+                    <button class="icon-btn" id="eqToggleBtn" title="Equalizer & FX (E)" aria-label="Open Equalizer">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
+
+                    <!-- Theme Selector -->
+                    <div class="theme-dropdown-wrapper">
+                        <button class="icon-btn" id="themeBtn" title="Change Theme" aria-label="Select Theme" aria-expanded="false" aria-haspopup="true">
+                            <i class="fa-solid fa-palette"></i>
+                        </button>
+                        <div class="theme-menu glass-popover" id="themeMenu" role="menu">
+                            <button class="theme-opt active" data-set-theme="midnight" role="menuitem"><span class="theme-dot dot-midnight"></span>Midnight Obsidian</button>
+                            <button class="theme-opt" data-set-theme="rose" role="menuitem"><span class="theme-dot dot-rose"></span>Rosé Glow</button>
+                            <button class="theme-opt" data-set-theme="cyberpunk" role="menuitem"><span class="theme-dot dot-cyberpunk"></span>Cyberpunk 2077</button>
+                            <button class="theme-opt" data-set-theme="emerald" role="menuitem"><span class="theme-dot dot-emerald"></span>Spotify Emerald</button>
+                            <button class="theme-opt" data-set-theme="solar" role="menuitem"><span class="theme-dot dot-solar"></span>Solar Amber</button>
+                            <button class="theme-opt" data-set-theme="amoled" role="menuitem"><span class="theme-dot dot-amoled"></span>AMOLED Dark</button>
+                        </div>
+                    </div>
+
+                    <!-- Sleep Timer -->
+                    <button class="icon-btn" id="sleepTimerBtn" title="Sleep Timer" aria-label="Set Sleep Timer">
+                        <i class="fa-solid fa-moon"></i>
+                        <span class="timer-badge" id="sleepTimerBadge" style="display:none;">30m</span>
+                    </button>
+
+                    <!-- Lyrics Drawer Toggle -->
+                    <button class="icon-btn" id="lyricsToggleBtn" title="Synchronized Lyrics (L)" aria-label="Toggle Lyrics">
+                        <i class="fa-solid fa-microphone-lines"></i>
+                    </button>
+
+                    <!-- Keyboard Shortcuts Help -->
+                    <button class="icon-btn" id="shortcutsBtn" title="Keyboard Shortcuts (?)" aria-label="Keyboard Shortcuts">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Album Artwork & Real-Time Visualizer Deck -->
+            <section class="art-visualizer-section">
+                <div class="canvas-container">
+                    <canvas id="visualizerCanvas" width="480" height="480" aria-hidden="true"></canvas>
+                </div>
+
+                <div class="artwork-wrapper" id="artworkWrapper">
+                    <div class="vinyl-record" id="vinylRecord" aria-hidden="true">
+                        <div class="vinyl-grooves"></div>
+                        <div class="vinyl-center"></div>
+                    </div>
+                    <div class="art-disc-container" id="artDisc">
+                        <img src="arjan.jpg" id="albumArt" class="album-art" alt="Reshmi Rumal album art by Arjan Dhillon">
+                        <div class="disc-glow"></div>
+                        <div class="disc-hole"></div>
+                    </div>
+
+                    <!-- Overlay Quick Play Button -->
+                    <button class="art-play-overlay" id="artPlayOverlay" aria-label="Quick Play/Pause">
+                        <i class="fa-solid fa-play" id="artPlayIcn"></i>
+                    </button>
+                </div>
+
+                <!-- Favorite & Format Tag Row -->
+                <div class="track-meta-pills">
+                    <button class="pill-btn heart-btn" id="favBtn" title="Add to Favorites" aria-label="Favorite track">
+                        <i class="fa-regular fa-heart" id="favIcn"></i>
+                    </button>
+                    <span class="tech-pill" id="techPill"><i class="fa-solid fa-bolt"></i> HD AUDIO</span>
+                    <button class="pill-btn" id="trackInfoBtn" title="Track Properties" aria-label="Track Information">
+                        <i class="fa-solid fa-circle-info"></i>
+                    </button>
+                </div>
+
+                <!-- Track Metadata -->
+                <div class="track-info">
+                    <div class="title-marquee-wrapper">
+                        <h1 class="track-title" id="trackTitle">Reshmi Rumal</h1>
+                    </div>
+                    <p class="track-artist" id="trackArtist">Arjan Dhillon</p>
+                    <p class="track-album" id="trackAlbum">Single &bull; Punjabi Folk / Pop</p>
+                </div>
+            </section>
+
+            <!-- Audio Tag -->
+            <audio id="song" src="Reshmi Rumal - Arjan Dhillon (DJJOhAL.Com).mp3" preload="auto">
                 Your browser does not support the audio element.
             </audio>
 
-            <input title="Seek progress" type="range" value="0" id="progress" aria-label="Music progress seek bar">
+            <!-- Progress Scrubber Section -->
+            <section class="scrubber-section">
+                <div class="progress-bar-container" id="progressContainer">
+                    <div class="buffer-bar" id="bufferBar"></div>
+                    <div class="progress-fill" id="progressFill"></div>
+                    <input type="range" id="progress" min="0" max="100" value="0" step="0.01" aria-label="Seek track position">
+                    <div class="scrub-tooltip" id="scrubTooltip">0:00</div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span id="durationTime" title="Click to toggle remaining time" class="clickable-duration">0:00</span>
+                </div>
+            </section>
 
-            <div class="control-icns">
-                <div onclick="prevSong()" role="button" aria-label="Previous track" tabindex="0"><i class="fa-solid fa-backward-step"></i></div>
-                <div onclick="playpause()" role="button" aria-label="Play or pause" tabindex="0"><i class="fa-solid play-pause fa-play" id="ctrlIcn"></i></div>
-                <div onclick="nextSong()" role="button" aria-label="Next track" tabindex="0"><i class="fa-solid fa-forward-step"></i></div>
+            <!-- Main Playback Control Deck -->
+            <section class="controls-deck" aria-label="Playback controls">
+                <!-- Shuffle -->
+                <button class="deck-btn mode-btn" id="shuffleBtn" title="Shuffle (S)" aria-label="Toggle Shuffle">
+                    <i class="fa-solid fa-shuffle"></i>
+                    <span class="indicator-dot" id="shuffleDot"></span>
+                </button>
+
+                <!-- Previous Track -->
+                <button class="deck-btn nav-btn" id="prevBtn" title="Previous Track (P / Arrow Left)" aria-label="Previous Track">
+                    <i class="fa-solid fa-backward-step"></i>
+                </button>
+
+                <!-- Seek -10s -->
+                <button class="deck-btn mini-nav-btn" id="rewind10Btn" title="Rewind 10s (J)" aria-label="Rewind 10 seconds">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    <span class="seek-tag">10</span>
+                </button>
+
+                <!-- Primary Play / Pause Button -->
+                <button class="deck-btn play-btn" id="playBtn" title="Play / Pause (Space)" aria-label="Play or Pause">
+                    <i class="fa-solid fa-play" id="ctrlIcn"></i>
+                    <span class="play-glow"></span>
+                </button>
+
+                <!-- Seek +10s -->
+                <button class="deck-btn mini-nav-btn" id="forward10Btn" title="Forward 10s (L)" aria-label="Forward 10 seconds">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span class="seek-tag">10</span>
+                </button>
+
+                <!-- Next Track -->
+                <button class="deck-btn nav-btn" id="nextBtn" title="Next Track (N / Arrow Right)" aria-label="Next Track">
+                    <i class="fa-solid fa-forward-step"></i>
+                </button>
+
+                <!-- Repeat Mode (Off / All / One) -->
+                <button class="deck-btn mode-btn" id="repeatBtn" title="Repeat Mode: Off (R)" aria-label="Toggle Repeat Mode">
+                    <i class="fa-solid fa-repeat" id="repeatIcn"></i>
+                    <span class="repeat-badge" id="repeatBadge" style="display:none;">1</span>
+                </button>
+            </section>
+
+            <!-- Bottom Audio Tools / Volume / Speed / Spatial Bar -->
+            <footer class="player-footer">
+                <!-- Volume Control -->
+                <div class="volume-container">
+                    <button class="icon-btn volume-btn" id="muteBtn" title="Mute/Unmute (M)" aria-label="Mute or Unmute">
+                        <i class="fa-solid fa-volume-high" id="volumeIcn"></i>
+                    </button>
+                    <div class="volume-slider-wrapper">
+                        <div class="volume-fill" id="volumeFill"></div>
+                        <input type="range" id="volumeSlider" min="0" max="1.5" step="0.01" value="0.9" aria-label="Volume Slider">
+                    </div>
+                    <span class="volume-val" id="volumeVal">90%</span>
+                </div>
+
+                <!-- Quick Audio FX Pills -->
+                <div class="footer-pills">
+                    <!-- Playback Speed -->
+                    <button class="fx-pill" id="speedBtn" title="Playback Speed" aria-label="Change Playback Speed">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <span id="speedVal">1.0x</span>
+                    </button>
+
+                    <!-- 8D Spatial Audio Toggle -->
+                    <button class="fx-pill" id="spatialBtn" title="8D Spatial Surround Audio" aria-label="Toggle 8D Spatial Audio">
+                        <i class="fa-solid fa-headphones"></i>
+                        <span id="spatialVal">8D OFF</span>
+                    </button>
+
+                    <!-- Fullscreen Toggle -->
+                    <button class="icon-btn" id="fullscreenBtn" title="Fullscreen Mode (F)" aria-label="Toggle Fullscreen">
+                        <i class="fa-solid fa-expand" id="fullscreenIcn"></i>
+                    </button>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Slide-out Drawer: Playlist & Library -->
+        <aside class="drawer-panel glass-panel" id="queueDrawer" aria-label="Playlist & Library" aria-hidden="true">
+            <div class="drawer-header">
+                <h2><i class="fa-solid fa-music"></i> Audio Library</h2>
+                <div class="drawer-header-actions">
+                    <label class="btn-primary-sm upload-label" title="Import Audio Files">
+                        <i class="fa-solid fa-file-import"></i> Add Songs
+                        <input type="file" id="fileInput" accept="audio/*" multiple style="display:none;">
+                    </label>
+                    <button class="icon-btn close-btn" id="closeQueueBtn" aria-label="Close Playlist"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div class="queue-search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="queueSearchInput" placeholder="Search track, artist..." aria-label="Search playlist">
+                <button class="clear-search-btn" id="clearSearchBtn" style="display:none;" aria-label="Clear search"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Library Tabs -->
+            <div class="queue-tabs">
+                <button class="tab-btn active" data-tab="all">All Tracks (<span id="allCount">1</span>)</button>
+                <button class="tab-btn" data-tab="favorites"><i class="fa-solid fa-heart"></i> Favorites (<span id="favCount">0</span>)</button>
+                <button class="tab-btn" data-tab="custom"><i class="fa-solid fa-cloud-arrow-up"></i> Custom (<span id="customCount">0</span>)</button>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div class="drop-zone" id="dropZone">
+                <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+                <p>Drag & Drop MP3, WAV, FLAC files here</p>
+                <span>or click "Add Songs" above</span>
+            </div>
+
+            <!-- Playlist Items List -->
+            <div class="queue-list" id="queueList" role="list">
+                <!-- Dynamically rendered track items -->
+            </div>
+
+            <div class="queue-footer">
+                <button class="btn-secondary-sm" id="clearCustomTracksBtn"><i class="fa-solid fa-trash-can"></i> Clear Custom</button>
+                <button class="btn-secondary-sm" id="exportPlaylistBtn"><i class="fa-solid fa-download"></i> Export JSON</button>
+            </div>
+        </aside>
+
+        <!-- Slide-out Drawer: Synchronized Lyrics -->
+        <aside class="drawer-panel glass-panel" id="lyricsDrawer" aria-label="Synchronized Lyrics" aria-hidden="true">
+            <div class="drawer-header">
+                <h2><i class="fa-solid fa-microphone-lines"></i> Lyrics & Karaoke</h2>
+                <div class="drawer-header-actions">
+                    <button class="btn-secondary-sm" id="customLyricsBtn" title="Load Custom LRC Lyrics"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                    <button class="icon-btn close-btn" id="closeLyricsBtn" aria-label="Close Lyrics"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <div class="lyrics-track-header">
+                <h3 id="lyricsTrackTitle">Reshmi Rumal</h3>
+                <p id="lyricsTrackArtist">Arjan Dhillon</p>
+            </div>
+
+            <div class="lyrics-container" id="lyricsContainer" role="region" aria-label="Live Synchronized Lyrics">
+                <div class="lyrics-scroll-box" id="lyricsScrollBox">
+                    <!-- Synced lyric lines rendered here -->
+                </div>
+            </div>
+
+            <div class="lyrics-footer">
+                <span class="lyrics-hint"><i class="fa-solid fa-hand-pointer"></i> Click any lyric line to jump to that timestamp</span>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal Dialog: 10-Band Equalizer & Audio FX -->
+    <dialog class="modal-dialog glass-modal" id="eqModal" aria-labelledby="eqModalTitle">
+        <div class="modal-header">
+            <h2 id="eqModalTitle"><i class="fa-solid fa-sliders"></i> 10-Band Equalizer & Audio DSP</h2>
+            <button class="icon-btn close-modal-btn" id="closeEqBtn" aria-label="Close Equalizer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Preset & Toggle Row -->
+            <div class="eq-top-bar">
+                <div class="eq-toggle-wrap">
+                    <label class="switch">
+                        <input type="checkbox" id="eqEnableSwitch" checked>
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="eq-status-label" id="eqStatusLabel">Equalizer ON</span>
+                </div>
+
+                <div class="eq-preset-wrap">
+                    <label for="eqPresetSelect">Preset:</label>
+                    <select id="eqPresetSelect" class="custom-select">
+                        <option value="flat">Flat / Natural</option>
+                        <option value="bass">Bass Boost</option>
+                        <option value="treble">Treble Boost</option>
+                        <option value="pop">Pop</option>
+                        <option value="rock">Rock</option>
+                        <option value="electronic">Electronic / EDM</option>
+                        <option value="hiphop">Hip-Hop / R&B</option>
+                        <option value="acoustic">Acoustic / Warm</option>
+                        <option value="vocal">Vocal Clarity</option>
+                        <option value="classical">Classical</option>
+                        <option value="club">Club / Dance</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+
+                <button class="btn-secondary-sm" id="resetEqBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+            </div>
+
+            <!-- 10-Band Sliders -->
+            <div class="eq-sliders-grid" id="eqSlidersGrid">
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_32">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="32" aria-label="32 Hertz EQ Band">
+                    <span class="eq-freq-label">32Hz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_64">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="64" aria-label="64 Hertz EQ Band">
+                    <span class="eq-freq-label">64Hz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_125">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="125" aria-label="125 Hertz EQ Band">
+                    <span class="eq-freq-label">125Hz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_250">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="250" aria-label="250 Hertz EQ Band">
+                    <span class="eq-freq-label">250Hz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_500">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="500" aria-label="500 Hertz EQ Band">
+                    <span class="eq-freq-label">500Hz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_1000">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="1000" aria-label="1000 Hertz EQ Band">
+                    <span class="eq-freq-label">1kHz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_2000">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="2000" aria-label="2000 Hertz EQ Band">
+                    <span class="eq-freq-label">2kHz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_4000">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="4000" aria-label="4000 Hertz EQ Band">
+                    <span class="eq-freq-label">4kHz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_8000">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="8000" aria-label="8000 Hertz EQ Band">
+                    <span class="eq-freq-label">8kHz</span>
+                </div>
+                <div class="eq-band-col">
+                    <span class="eq-val-badge" id="eqVal_16000">0dB</span>
+                    <input type="range" class="eq-slider" orient="vertical" min="-12" max="12" step="0.5" value="0" data-band="16000" aria-label="16000 Hertz EQ Band">
+                    <span class="eq-freq-label">16kHz</span>
+                </div>
+            </div>
+
+            <!-- Extra Audio FX Deck -->
+            <div class="eq-extra-fx">
+                <div class="fx-card">
+                    <div class="fx-header">
+                        <h4><i class="fa-solid fa-volume-high"></i> Preamp Gain Boost</h4>
+                        <span id="preampVal">0.0 dB</span>
+                    </div>
+                    <input type="range" id="preampSlider" min="0" max="6" step="0.5" value="0" aria-label="Preamp Gain Slider">
+                </div>
+
+                <div class="fx-card">
+                    <div class="fx-header">
+                        <h4><i class="fa-solid fa-headphones"></i> 8D Surround Simulation</h4>
+                        <span id="spatialDepthVal">Medium Speed</span>
+                    </div>
+                    <div class="fx-row">
+                        <label class="switch">
+                            <input type="checkbox" id="spatialSwitch">
+                            <span class="slider round"></span>
+                        </label>
+                        <input type="range" id="spatialSpeedSlider" min="0.05" max="0.4" step="0.05" value="0.15" aria-label="8D Rotation Speed">
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </dialog>
+
+    <!-- Modal Dialog: Sleep Timer -->
+    <dialog class="modal-dialog glass-modal small-modal" id="sleepTimerModal" aria-labelledby="sleepTimerTitle">
+        <div class="modal-header">
+            <h2 id="sleepTimerTitle"><i class="fa-solid fa-moon"></i> Sleep Timer</h2>
+            <button class="icon-btn close-modal-btn" id="closeSleepBtn" aria-label="Close Sleep Timer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-subtitle">Automatically pause playback with a smooth fade-out.</p>
+            <div class="timer-grid">
+                <button class="timer-chip" data-timer="5">5 Minutes</button>
+                <button class="timer-chip" data-timer="15">15 Minutes</button>
+                <button class="timer-chip" data-timer="30">30 Minutes</button>
+                <button class="timer-chip" data-timer="45">45 Minutes</button>
+                <button class="timer-chip" data-timer="60">60 Minutes</button>
+                <button class="timer-chip" data-timer="end">End of Song</button>
+            </div>
+            <div class="custom-timer-row">
+                <input type="number" id="customTimerMinutes" placeholder="Custom mins" min="1" max="360" aria-label="Custom minutes">
+                <button class="btn-primary-sm" id="setCustomTimerBtn">Set</button>
+            </div>
+            <div class="timer-active-status" id="timerActiveStatus" style="display:none;">
+                <p>Timer Active: <strong id="timerCountdown">00:00</strong> remaining</p>
+                <button class="btn-secondary-sm text-danger" id="cancelTimerBtn"><i class="fa-solid fa-stop"></i> Cancel Timer</button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Modal Dialog: Keyboard Shortcuts Guide -->
+    <dialog class="modal-dialog glass-modal" id="shortcutsModal" aria-labelledby="shortcutsTitle">
+        <div class="modal-header">
+            <h2 id="shortcutsTitle"><i class="fa-solid fa-keyboard"></i> Keyboard Shortcuts</h2>
+            <button class="icon-btn close-modal-btn" id="closeShortcutsBtn" aria-label="Close Shortcuts"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="shortcuts-grid">
+                <div class="shortcut-row"><kbd>Space</kbd> / <kbd>K</kbd> <span>Play / Pause</span></div>
+                <div class="shortcut-row"><kbd>&larr;</kbd> / <kbd>J</kbd> <span>Seek Backward 5s (Shift for 10s)</span></div>
+                <div class="shortcut-row"><kbd>&rarr;</kbd> / <kbd>L</kbd> <span>Seek Forward 5s (Shift for 10s)</span></div>
+                <div class="shortcut-row"><kbd>&uarr;</kbd> / <kbd>&darr;</kbd> <span>Volume Up / Down (5%)</span></div>
+                <div class="shortcut-row"><kbd>M</kbd> <span>Mute / Unmute</span></div>
+                <div class="shortcut-row"><kbd>N</kbd> <span>Next Track</span></div>
+                <div class="shortcut-row"><kbd>P</kbd> <span>Previous Track</span></div>
+                <div class="shortcut-row"><kbd>S</kbd> <span>Toggle Shuffle</span></div>
+                <div class="shortcut-row"><kbd>R</kbd> <span>Cycle Repeat (Off &rarr; All &rarr; One)</span></div>
+                <div class="shortcut-row"><kbd>E</kbd> <span>Toggle 10-Band Equalizer</span></div>
+                <div class="shortcut-row"><kbd>V</kbd> <span>Cycle Visualizer Mode</span></div>
+                <div class="shortcut-row"><kbd>Q</kbd> <span>Toggle Playlist & Queue</span></div>
+                <div class="shortcut-row"><kbd>Y</kbd> <span>Toggle Lyrics & Karaoke</span></div>
+                <div class="shortcut-row"><kbd>F</kbd> <span>Toggle Fullscreen</span></div>
+                <div class="shortcut-row"><kbd>?</kbd> <span>Show Shortcuts Sheet</span></div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Modal Dialog: Track Inspector Details -->
+    <dialog class="modal-dialog glass-modal small-modal" id="trackInfoModal" aria-labelledby="trackInfoTitle">
+        <div class="modal-header">
+            <h2 id="trackInfoTitle"><i class="fa-solid fa-circle-info"></i> Track Information</h2>
+            <button class="icon-btn close-modal-btn" id="closeTrackInfoBtn" aria-label="Close Information"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <table class="track-info-table">
+                <tr><th>Title:</th><td id="infoTitle">Reshmi Rumal</td></tr>
+                <tr><th>Artist:</th><td id="infoArtist">Arjan Dhillon</td></tr>
+                <tr><th>Album:</th><td id="infoAlbum">Single Release</td></tr>
+                <tr><th>Duration:</th><td id="infoDuration">0:00</td></tr>
+                <tr><th>Format:</th><td id="infoFormat">Audio / MPEG (MP3)</td></tr>
+                <tr><th>DSP Engine:</th><td>Web Audio API &bull; 32-bit Float</td></tr>
+                <tr><th>Channels:</th><td>Stereo (2.0)</td></tr>
+            </table>
+        </div>
+    </dialog>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
     <script src="app.js"></script>
 </body>
 </html>

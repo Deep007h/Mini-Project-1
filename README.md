@@ -1,54 +1,82 @@
-# Basic Music Player
+# PulseWave Pro &bull; Advanced Web Music Player Suite
 
 <p align="center">
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5" alt="HTML5">
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3" alt="CSS3">
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript" alt="JavaScript">
-  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge" alt="Status">
+  <img src="https://img.shields.io/badge/HTML5-Semantic_&_A11y-E34F26?style=for-the-badge&logo=html5" alt="HTML5">
+  <img src="https://img.shields.io/badge/CSS3-Glassmorphism_&_Theming-1572B6?style=for-the-badge&logo=css3" alt="CSS3">
+  <img src="https://img.shields.io/badge/JavaScript-ES6+_Web_Audio_API-F7DF1E?style=for-the-badge&logo=javascript" alt="JavaScript">
+  <img src="https://img.shields.io/badge/Audio_DSP-10--Band_EQ_&_8D_Spatial-8b5cf6?style=for-the-badge&logo=audio-technica" alt="Web Audio">
+  <img src="https://img.shields.io/badge/Visualizer-Canvas_60fps-1db954?style=for-the-badge&logo=canvas" alt="Canvas 60fps">
 </p>
 
-> A clean, simple music player web app built with vanilla HTML, CSS, and JavaScript. Features a single-track demo player with play/pause, seek bar, and track navigation controls.
+> **PulseWave Pro** is a modern, high-performance, studio-grade web music player application built with Vanilla HTML5, modern CSS3 glassmorphism, and the Web Audio API. It transforms a basic audio player into a full-fledged music suite featuring real-time visualizers, a 10-band graphic equalizer with DSP effects, synchronized karaoke lyrics (LRC), a multi-track queue with drag-and-drop audio import, dynamic theme customization, sleep timer, and full Media Session & keyboard integration.
 
 ---
 
-## Features
+## Key Features
 
-- **Audio Playback** -- Play and pause a demo MP3 track ("Reshmi Rumal" by Arjan Dhillon).
-- **Seek Bar** -- Drag or click the progress bar to jump to any point in the song.
-- **Track Controls** -- Previous and Next buttons (restart the track for this single-song demo).
-- **Visual Feedback** -- Play/pause button icon toggles; progress bar updates in real time.
-- **Responsive Design** -- Centered player card works on desktop, tablet, and mobile.
-- **Keyboard Accessible** -- Controls are focusable and operable via keyboard.
-- **Error Handling** -- Graceful fallbacks for unsupported audio formats and autoplay restrictions.
+### 1. Web Audio DSP & 10-Band Graphic Equalizer
+- **10-Band Graphic Equalizer**: Precise frequency shaping across `32Hz`, `64Hz`, `125Hz`, `250Hz`, `500Hz`, `1kHz`, `2kHz`, `4kHz`, `8kHz`, and `16kHz` (-12dB to +12dB).
+- **Pro EQ Presets**: 11 factory presets (*Flat, Bass Boost, Treble Boost, Pop, Rock, Electronic, Hip-Hop, Acoustic, Vocal Clarity, Classical, Club/Dance*) + Custom user tweaking.
+- **8D / Spatial Surround Audio Simulation**: Smooth automatic stereo panning oscillation for immersive headphone listening.
+- **Master Preamp Gain Boost**: Clean signal amplification up to +6dB.
+- **Playback Speed Controller**: Adjust playback speed from `0.5x` to `2.0x` with pitch preservation (`preservesPitch = true`).
+
+### 2. Real-Time Audio Visualizer (Canvas 60+ FPS)
+- **4 Visualizer Modes**:
+  1. **Cyber Neon Bars**: Frequency spectrum analysis with reactive gradients, rounded bars, and dynamic peak bounce caps.
+  2. **Oscilloscope Waveform**: Fluid time-domain spline with neon glowing aura.
+  3. **Radial Circle Visualizer**: Circular outward-radiating audio spikes centered around the album artwork.
+  4. **Beat-Reactive Particles**: Ambient particle physics system that bursts and floats with bass and sub-bass hits.
+- High-DPI (Retina) DPR scaling for ultra-crisp rendering on all screens.
+
+### 3. Queue, Playlist & Drag-and-Drop File Import
+- **Curated Multi-Track Library**: Features the demo track (*"Reshmi Rumal"* by Arjan Dhillon) alongside high-fidelity curated audio tracks.
+- **Custom Audio Importer**: Drag and drop any `.mp3`, `.wav`, `.ogg`, `.m4a`, or `.flac` files directly from your computer to play instantly.
+- **Playlist Management**: Real-time search filter, track favorites (heart), track removal, and JSON playlist export.
+- **Playback Modes**: True Fisher-Yates random shuffle and 3-state repeat (*Off*, *Repeat All*, *Repeat One*).
+
+### 4. Synchronized Lyrics & Karaoke Engine
+- **LRC Parser & Real-Time Sync**: Synchronizes line-by-line lyrics with audio timestamps.
+- **Interactive Scrobble**: Click any line of lyrics to jump playback directly to that timestamp.
+- **Custom Lyrics Editor**: Easily paste or edit LRC lyrics directly in the browser.
+
+### 5. Dynamic Themes & Glassmorphism Aesthetics
+- **6 Dynamic Theme Palettes**:
+  - **Rosé Glow** (Neon Magenta & Soft Pink)
+  - **Midnight Obsidian** (Deep Purple & Cyan)
+  - **Cyberpunk 2077** (Electric Yellow, Cyan & Hot Red)
+  - **Spotify Emerald** (Deep Charcoal & Spotify Green)
+  - **Solar Amber** (Warm Sunset Coral & Golden Amber)
+  - **AMOLED Dark** (Pure Obsidian & High Contrast White)
+- **Vinyl Disc Spin Animation**: Album artwork seamlessly rotates like a vinyl turntable during playback.
+- **Scrubber Tooltip & Buffer Indicator**: Displays time preview on hover and tracks buffered audio stream chunks.
+
+### 6. Sleep Timer & Utilities
+- **Smart Sleep Timer**: Set auto-pause for 5, 15, 30, 45, 60 minutes, End of Song, or a custom duration with a gentle 15-second fade-out.
+- **Track Inspector**: View track metadata, audio format, bit depth, channel configuration, and duration.
+- **Local Storage Persistence**: Automatically remembers your favorite tracks, custom theme preference, volume, and EQ settings.
 
 ---
 
-## How to Use
+## Keyboard Shortcuts
 
-### Option 1: Open Directly
-1. Clone or download this repository.
-2. Open `index.html` in any modern web browser (Chrome, Firefox, Edge, Safari).
-3. Click the **play button** (center, pink circle) to start playback.
-4. Drag the **progress bar** to seek through the track.
-5. Use the **previous / next** buttons to restart the track.
-
-### Option 2: Live Server (Recommended for Development)
-```bash
-# Using VS Code Live Server
-npx live-server
-```
-Or use any local HTTP server of your choice. While the player works when opened directly via `file://`, using a local server avoids potential CORS and autoplay issues.
-
----
-
-## Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| **HTML5** | Page structure and semantic markup |
-| **CSS3** | Styling, layout, hover effects, and responsive design |
-| **JavaScript (ES6)** | Audio control logic, event handling, DOM manipulation |
-| **Font Awesome 6** | Icon set for playback controls (play, pause, skip, nav) |
+| Shortcut | Action |
+| :--- | :--- |
+| <kbd>Space</kbd> or <kbd>K</kbd> | Play / Pause |
+| <kbd>&larr;</kbd> or <kbd>J</kbd> | Seek backward 5s (Hold <kbd>Shift</kbd> for 10s) |
+| <kbd>&rarr;</kbd> or <kbd>L</kbd> | Seek forward 5s (Hold <kbd>Shift</kbd> for 10s) |
+| <kbd>&uarr;</kbd> / <kbd>&darr;</kbd> | Volume up / down (5%) |
+| <kbd>M</kbd> | Mute / Unmute audio |
+| <kbd>N</kbd> | Next track in queue |
+| <kbd>P</kbd> | Previous track in queue |
+| <kbd>S</kbd> | Toggle Shuffle mode |
+| <kbd>R</kbd> | Cycle Repeat mode (Off &rarr; All &rarr; One) |
+| <kbd>E</kbd> | Toggle 10-Band Equalizer modal |
+| <kbd>V</kbd> | Cycle Visualizer mode |
+| <kbd>Q</kbd> | Toggle Playlist / Queue drawer |
+| <kbd>Y</kbd> | Toggle Synchronized Lyrics drawer |
+| <kbd>F</kbd> | Toggle Fullscreen mode |
+| <kbd>?</kbd> | Show Keyboard Shortcuts cheat sheet |
 
 ---
 
@@ -56,82 +84,43 @@ Or use any local HTTP server of your choice. While the player works when opened 
 
 ```
 Mini-Project-1/
-├── .github/
-│   └── workflows/
-│       ├── daily-contribution.yml   # Scheduled daily commit workflow
-│       └── bug-tracker.yml          # Automated bug & fix tracking
-├── index.html                       # Main HTML page (music player UI)
-├── main-css.css                     # All stylesheets
-├── app.js                           # JavaScript audio control logic
-├── arjan.jpg                        # Album art / artist image
-├── Reshmi Rumal - Arjan Dhillon (DJJOhAL.Com).mp3  # Demo audio track
-├── CONTRIBUTIONS.md                 # Auto-generated contribution log
-├── bug_report.txt                   # Auto-generated bug tracking log
-└── README.md                        # This file
+├── index.html                       # Semantic HTML5 UI, modals, drawers & visualizer canvas
+├── main-css.css                     # Glassmorphism styling, themes, animations & responsive layout
+├── app.js                           # Modular ES6 Web Audio DSP, Visualizers, Lyrics & Queue logic
+├── arjan.jpg                        # Featured album art
+├── Reshmi Rumal - Arjan Dhillon (DJJOhAL.Com).mp3  # Featured demo track
+├── CONTRIBUTIONS.md                 # Contribution history
+├── bug_report.txt                   # Automated test & bug tracker log
+└── README.md                        # Documentation
 ```
 
 ---
 
-## Track Details
+## How to Run
 
-| Track | Artist | Duration |
-|-------|--------|----------|
-| Reshmi Rumal | Arjan Dhillon | ~3:45 |
+### Option 1: Open Directly
+Simply double-click `index.html` or open it in any modern web browser (Google Chrome, Mozilla Firefox, Microsoft Edge, Apple Safari).
 
----
+### Option 2: Local HTTP Server (Recommended for Web Audio features)
+```bash
+# Using Python
+python3 -m http.server 8000
 
-## Bug Fixes & Improvements
-
-This project underwent a thorough code review and cleanup. The following issues were identified and fixed:
-
-### JavaScript Fixes
-- **Removed autoplay on page load** -- Original code used `if(song.play()) {...}` which attempted to auto-play the song. This is blocked by modern browsers and created an unreliable interval. Replaced with a proper `timeupdate` event listener.
-- **Replaced `setInterval` with `timeupdate` event** -- The progress bar now updates via the native audio `timeupdate` event, which is more efficient and accurate than a polling interval.
-- **Fixed seek bar behavior** -- The `progress.onchange` handler no longer forces playback on seek. The song stays paused if it was paused before the user dragged the slider.
-- **Added forward/backward button handlers** -- `prevSong()` and `nextSong()` functions were missing. They now restart the track (or skip in a multi-track player).
-- **Added audio error handling** -- A fallback error listener reports if the MP3 fails to load.
-- **End-of-song reset** -- The play button and progress bar are properly reset when the track finishes.
-- **Improved `Promise` handling for `song.play()`** -- The return value of `play()` is a Promise; `.then()` / `.catch()` are now used for proper handling.
-
-### HTML Fixes
-- **Fixed broken asset paths** -- Removed leading `/` from `src` attributes (`/arjan.jpg`, `/app.js`, `/Reshmi Rumal...mp3`) so the files resolve correctly when opened locally.
-- **Added audio fallback text** -- "Your browser does not support the audio element" for unsupported browsers.
-- **Improved accessibility** -- Added `aria-label`, `role="button"`, and `tabindex="0"` to all icon-only control buttons. Changed `alt` text from `"song_img"` to a descriptive `"Reshmi Rumal album art by Arjan Dhillon"`.
-
-### CSS Fixes
-- **Fixed typo** -- Changed `border: 8px solod #fff` to `border: 8px solid #fff` so the album art border renders correctly.
-- **Added `box-sizing: border-box`** -- Global reset for consistent box model.
-- **Added `appearance: none`** -- Full cross-browser support for range input styling.
-- **Added `::-moz-range-thumb`** -- Firefox-specific thumb styling for the progress slider.
-- **Added hover/focus states** -- Better visual feedback and keyboard focus indicators for interactive elements.
+# Using Node.js npx
+npx serve .
+```
+Navigate to `http://localhost:8000` in your browser.
 
 ---
 
-## Accessibility
+## Technologies Used
 
-- All icon-only buttons have `aria-label` attributes describing their function.
-- Buttons have `role="button"` and `tabindex="0"` for keyboard navigation.
-- The progress slider has a descriptive `aria-label`.
-- Focus-visible outlines are provided for keyboard users.
-
----
-
-## Browser Compatibility
-
-| Browser | Status |
-|---------|--------|
-| Chrome | Fully supported |
-| Firefox | Fully supported |
-| Safari | Fully supported |
-| Edge | Fully supported |
+- **HTML5**: Semantic document layout, accessible `<dialog>` modals, `<canvas>`, `<audio>`.
+- **CSS3**: CSS Custom Properties (Theming), CSS Grid, Flexbox, Glassmorphism (`backdrop-filter`), CSS Animations.
+- **JavaScript (ES6+)**: Web Audio API (`AudioContext`, `BiquadFilterNode`, `StereoPannerNode`, `GainNode`, `AnalyserNode`), Canvas 2D Rendering Context, MediaSession API, LocalStorage API.
+- **Font Awesome 6**: Vector icons for playback, DSP controls, and navigation.
+- **Google Fonts**: Outfit & JetBrains Mono typography.
 
 ---
 
-## License
-
-This project is for educational purposes.
-
----
-
-<p align="center">Made with ❤️ by <a href="https://github.com/Deep007h">Deep007h</a></p>
-
+<p align="center">Crafted with ❤️ by <a href="https://github.com/Deep007h">Deep007h</a></p>
