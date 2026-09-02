@@ -1,4 +1,4 @@
-# PulseWave Pro &bull; Advanced Web Music Player Suite
+# Web Music Player Site
 
 <p align="center">
   <img src="https://img.shields.io/badge/HTML5-Semantic_&_A11y-E34F26?style=for-the-badge&logo=html5" alt="HTML5">
@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Visualizer-Canvas_60fps-1db954?style=for-the-badge&logo=canvas" alt="Canvas 60fps">
 </p>
 
-> **PulseWave Pro** is a modern, high-performance, studio-grade web music player application built with Vanilla HTML5, modern CSS3 glassmorphism, and the Web Audio API. It transforms a basic audio player into a full-fledged music suite featuring real-time visualizers, a 10-band graphic equalizer with DSP effects, synchronized karaoke lyrics (LRC), a multi-track queue with drag-and-drop audio import, dynamic theme customization, sleep timer, and full Media Session & keyboard integration.
+> A modern, high-performance, studio-grade web music player application built with Vanilla HTML5, modern CSS3 glassmorphism, and the Web Audio API. It transforms a basic audio player into a full-fledged music suite featuring real-time visualizers, a 10-band graphic equalizer with DSP effects, synchronized karaoke lyrics (LRC), a multi-track queue with drag-and-drop audio import, dynamic theme customization, sleep timer, and full Media Session & keyboard integration.
 
 ---
 

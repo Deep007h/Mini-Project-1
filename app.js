@@ -1,5 +1,5 @@
 /**
- * PulseWave Pro &bull; Advanced Music Player Suite
+ * Web Music Player Site
  * Professional Web Audio DSP, Visualizer, Playlist Engine, Synced Lyrics & Theming
  */
 
@@ -59,7 +59,7 @@ const DEFAULT_PLAYLIST = [
         lyrics: `[00:00.00] Midnight City Lights &bull; Synthwave Sunset
 [00:08.00] Cruising down the neon highway
 [00:15.50] Digital horizon in the rear view
-[00:23.00] Analog synthesizers pulse through the night
+[00:23.00] Analog synthesizers echo through the night
 [00:30.00] Cyberpunk vibes and retro lights
 [00:38.00] (Synth Solo & Bassline)
 [00:52.00] Speeding through the midnight rain
@@ -87,7 +87,7 @@ const DEFAULT_PLAYLIST = [
     },
     {
         id: "track-4",
-        title: "Cyber Pulse 2077",
+        title: "Neon Cyber Drive",
         artist: "Neon Overdrive",
         album: "Night City Anthems",
         genre: "Cyberpunk / Darksynth",
@@ -96,12 +96,12 @@ const DEFAULT_PLAYLIST = [
         art: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80",
         duration: 346,
         isCustom: false,
-        lyrics: `[00:00.00] Cyber Pulse 2077 &bull; Neon Overdrive
+        lyrics: `[00:00.00] Neon Cyber Drive &bull; Neon Overdrive
 [00:06.00] Neural network handshake confirmed
 [00:14.00] High voltage bassline incoming
 [00:26.00] Maximum overdrive engaged
 [00:40.00] Cybernetic beats taking over
-[00:58.00] Drop the pulse!
+[00:58.00] Drop the bass!
 [01:15.00] System overclocked`
     },
     {
@@ -147,7 +147,7 @@ const VIS_MODES = ["Bars", "Wave", "Radial", "Particles", "Off"];
 // 2. Application Core Class
 // ==========================================================================
 
-class PulseWaveApp {
+class WebMusicPlayerApp {
     constructor() {
         // State
         this.playlist = this.loadPlaylist();
@@ -192,14 +192,14 @@ class PulseWaveApp {
         this.loadTrack(0, false);
         this.renderQueueList();
 
-        console.log("PulseWave Pro initialized successfully.");
+        console.log("Web Music Player Site initialized successfully.");
     }
 
     // ----------------------------------------------------------------------
     // Storage Helpers
     // ----------------------------------------------------------------------
     loadPlaylist() {
-        const savedCustom = localStorage.getItem("pulsewave_custom_tracks");
+        const savedCustom = localStorage.getItem("web_music_player_custom_tracks") || localStorage.getItem("music_player_custom_tracks");
         if (savedCustom) {
             try {
                 const parsed = JSON.parse(savedCustom);
@@ -213,11 +213,11 @@ class PulseWaveApp {
 
     saveCustomTracks() {
         const customOnly = this.playlist.filter(t => t.isCustom);
-        localStorage.setItem("pulsewave_custom_tracks", JSON.stringify(customOnly));
+        localStorage.setItem("web_music_player_custom_tracks", JSON.stringify(customOnly));
     }
 
     loadFavorites() {
-        const saved = localStorage.getItem("pulsewave_favorites");
+        const saved = localStorage.getItem("web_music_player_favorites") || localStorage.getItem("music_player_favorites");
         if (saved) {
             try { return JSON.parse(saved); } catch (e) {}
         }
@@ -225,7 +225,7 @@ class PulseWaveApp {
     }
 
     saveFavorites() {
-        localStorage.setItem("pulsewave_favorites", JSON.stringify(this.favorites));
+        localStorage.setItem("web_music_player_favorites", JSON.stringify(this.favorites));
     }
 
     // ----------------------------------------------------------------------
@@ -1258,13 +1258,13 @@ class PulseWaveApp {
     // 11. Theme & Customization Engine
     // ----------------------------------------------------------------------
     initTheme() {
-        const savedTheme = localStorage.getItem("pulsewave_theme") || "midnight";
+        const savedTheme = localStorage.getItem("web_music_player_theme") || localStorage.getItem("music_player_theme") || "midnight";
         this.setTheme(savedTheme);
     }
 
     setTheme(themeKey) {
         document.documentElement.setAttribute("data-theme", themeKey);
-        localStorage.setItem("pulsewave_theme", themeKey);
+        localStorage.setItem("web_music_player_theme", themeKey);
 
         document.querySelectorAll(".theme-opt").forEach(opt => {
             opt.classList.toggle("active", opt.dataset.setTheme === themeKey);
@@ -1473,7 +1473,7 @@ class PulseWaveApp {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.playlist, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "pulsewave_playlist.json");
+            downloadAnchor.setAttribute("download", "playlist.json");
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
@@ -1683,5 +1683,5 @@ class PulseWaveApp {
 
 // Instantiate on DOM Load
 document.addEventListener("DOMContentLoaded", () => {
-    window.pulseWaveApp = new PulseWaveApp();
+    window.musicPlayerApp = new WebMusicPlayerApp();
 });
